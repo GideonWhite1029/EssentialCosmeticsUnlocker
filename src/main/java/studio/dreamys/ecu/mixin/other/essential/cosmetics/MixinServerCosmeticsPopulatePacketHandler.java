@@ -20,18 +20,38 @@ import java.util.List;
 
 @Mixin(value = ServerCosmeticsPopulatePacketHandler.class, remap = false)
 public class MixinServerCosmeticsPopulatePacketHandler {
+
+    private File getDumpFile() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        File dumpFile;
+
+        if (osName.contains("win")) {
+            dumpFile = new File(new File(System.getenv("APPDATA"), "ecu"), "dump.txt");
+        } else {
+            dumpFile = new File(new File(System.getProperty("user.home"), "ecu"), "dump.txt");
+        }
+
+        return dumpFile;
+    }
+
     @Inject(method = "onHandle(Lgg/essential/network/connectionmanager/ConnectionManager;Lgg/essential/connectionmanager/common/packet/cosmetic/ServerCosmeticsPopulatePacket;)V", at = @At("HEAD"))
     public void onHandle(ConnectionManager connectionManager, ServerCosmeticsPopulatePacket packet, CallbackInfo ci) {
         try {
             Gson gson = new Gson();
             List<Cosmetic> cosmetics = new ArrayList<>();
-            File dumpFile = new File(new File(System.getenv("APPDATA"), "ecu"), "dump.txt");
+            File dumpFile = getDumpFile();
             dumpFile.getParentFile().mkdirs();
 
             //start with already existing or new list
             if (dumpFile.exists()) {
-                cosmetics = gson.fromJson(Files.readAllLines(dumpFile.toPath()).toString(), new TypeToken<List<Cosmetic>>() {
-                }.getType());
+                String fileContent = Files.readAllLines(dumpFile.toPath()).toString();
+
+                if (fileContent.startsWith("[")) {
+                    cosmetics = gson.fromJson(fileContent, new TypeToken<List<Cosmetic>>(){}.getType());
+                } else {
+                    Cosmetic singleCosmetic = gson.fromJson(fileContent, Cosmetic.class);
+                    cosmetics.add(singleCosmetic);
+                }
             }
 
             //add incoming cosmetics to the list
@@ -39,8 +59,8 @@ public class MixinServerCosmeticsPopulatePacketHandler {
 
             //dump the list to file
             System.out.println("[EssentialCosmeticsUnlocker] Dumping cosmetics to file...");
-            PrintWriter pw = new PrintWriter(new FileOutputStream(dumpFile, true));
-            pw.println(new Gson().toJson(cosmetics));
+            PrintWriter pw = new PrintWriter(new FileOutputStream(dumpFile, false));
+            pw.println(gson.toJson(cosmetics));
             pw.close();
             System.out.println("[EssentialCosmeticsUnlocker] Dumped cosmetics to file!");
         } catch (Exception e) {

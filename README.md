@@ -1,5 +1,5 @@
 # EssentialCosmeticsUnlocker
-**Client-side only** patch that allows you to unlock ALL cosmetics (+ emotes) in the Essential mod. Works on every version of Essential MC (1.8.9 - 1.20.6).
+**Client-side only** patch that allows you to unlock ALL cosmetics (+ emotes) in the Essential mod. Works on every version of Essential MC (1.8.9 - 1.21.1).
 
 ![](https://img.shields.io/badge/COMPATIBILITY-∞-0?style=for-the-badge)
 ![](https://img.shields.io/github/downloads/DxxxxY/EssentialCosmeticsUnlocker/total?style=for-the-badge)
@@ -20,14 +20,16 @@ Feel free to contribute to this table with a PR and a convincing screenshot. Onl
 
 | MC Major Version | Forge        | Fabric*            | Last Checked (dd/mm/yyyy) |
 |------------------|--------------|--------------------|---------------------------|
-| 1.8              | `✔️ works`^  | `⬛ not applicable` | 24/05/2024                |
+| 1.8              | `✔️ works`^  | `⬛ not applicable` | 29/09/2024                |
 | 1.12             | `✔️ works`^️ | `⬛ not applicable` |                           |
 |                  |              |                    |                           |
 | 1.16             | `✔️ works`   | `✔️ works`         |                           |
 | 1.17             | `✔️ works`️  | `✔️ works`         |                           |
 | 1.18             | `✔️ works`️  | `✔️ works`         |                           |
 | 1.19             | `✔️ works`️  | `✔️ works`         |                           |
-| 1.20             | `✔️ works`   | `✔️ works`         | 24/05/2024                |
+| 1.20             | `✔️ works`   | `✔️ works`         |                           |
+| 1.21             | `✔️ works`   | `✔️ works`         | 29/09/2024                |
+  
 
 Last Essential version checked: **v1.3.2.4**
 

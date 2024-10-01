@@ -44,15 +44,30 @@ public abstract class MixinCosmeticsManager {
         return StateKt.stateOf(getCosmeticsData().getCosmetics().get().stream().map(Cosmetic::getId).collect(Collectors.toSet()));
     }
 
+    private File getConfigFile() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        File configFile;
+
+        if (osName.contains("win")) {
+            configFile = new File(new File(System.getenv("APPDATA"), "ecu"), "ecu.txt");
+        } else {
+            configFile = new File(new File(System.getProperty("user.home"), "ecu"), "ecu.txt");
+        }
+
+        return configFile;
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     public void CosmeticManager(ConnectionManager connectionManager, File baseDir, CallbackInfo ci) {
         //load config
         try {
             System.out.println("[EssentialCosmeticsUnlocker] Loading config");
-
-            //create if doesnt exist
-            File configFile = new File(new File(System.getenv("APPDATA"), "ecu"), "ecu.txt");
+            File configFile = getConfigFile();
             configFile.getParentFile().mkdirs();
+
+            if (!configFile.exists()) {
+                configFile.createNewFile();
+            }
 
             Scanner sc = new Scanner(configFile);
 
@@ -95,7 +110,8 @@ public abstract class MixinCosmeticsManager {
         //save config
         try {
             System.out.println("[EssentialCosmeticsUnlocker] Saving config");
-            PrintWriter pw = new PrintWriter(new File(new File(System.getenv("APPDATA"), "ecu"), "ecu.txt"));
+            File configFile = getConfigFile();
+            PrintWriter pw = new PrintWriter(configFile);
 
             for (Map.Entry<CosmeticSlot, String> entry : map.entrySet()) {
                 pw.println(entry.getKey().getId() + "=" + entry.getValue());
